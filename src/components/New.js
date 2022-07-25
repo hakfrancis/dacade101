@@ -18,7 +18,6 @@ function New({ addMovie }) {
       alert("Fill in all fields first!");
       return;
     }
-    console.log(name, description, thumbnail, length, value);
     await addMovie(name, description, thumbnail, length, value);
     setShow(false);
   };
