@@ -38,6 +38,7 @@ contract Reels {
 
     // movie details
     struct Movie {
+        address owner;
         string name;
         string description;
         string thumbnail;
@@ -46,7 +47,6 @@ contract Reels {
         uint256 rateCount;
         uint256 timesViewed;
         uint256 baseValue;
-        bool active;
     }
 
     // mapping to keep track of all Movies
@@ -58,6 +58,11 @@ contract Reels {
 
     modifier exist(uint _movieSerial) {
         require(exists[_movieSerial], "Query of non existent movie");
+        _;
+    }
+
+    modifier isValidViewer(uint _movieSerial){
+        require(movies[_movieSerial].owner == msg.sender || owner == msg.sender, "Unauthorized caller");
         _;
     }
 
@@ -95,6 +100,7 @@ contract Reels {
         require(bytes(_thumbnail).length > 0, "Empty image url");
         exists[serial] = true;
         movies[serial] = Movie(
+            msg.sender,
             _name,
             _description,
             _thumbnail,
@@ -102,14 +108,13 @@ contract Reels {
             5,
             1,
             0,
-            _value,
-            true
+            _value
         );
         serial += 1;
     }
 
     /// @dev function to remove a movie from the cinema
-    function removeMovie(uint256 _movieSerial) external exist(_movieSerial) {
+    function removeMovie(uint256 _movieSerial) external exist(_movieSerial) isValidViewer(_movieSerial) {
         movies[_movieSerial] = movies[serial - 1];
         delete movies[serial - 1];
         exists[serial - 1] = false;
@@ -121,14 +126,12 @@ contract Reels {
         external
         payable
         exist(_movieSerial)
+        isValidViewer(_movieSerial)
     {
-        // first confirm if movie is available
-        require(movies[_movieSerial].active, "Movie deleted/does not exist");
-        // get calculated value of movie
-        uint256 calculatedValue = calculateValue(_movieSerial);
         if (!viewed[_movieSerial][msg.sender]) {
             viewed[_movieSerial][msg.sender] = true;
-            movies[_movieSerial].timesViewed++;
+            // get calculated value of movie
+            uint256 calculatedValue = calculateValue(_movieSerial);
             // transfer calculated value from to owner of studio
             require(
                 IERC20Token(cUsdTokenAddress).transferFrom(
@@ -139,11 +142,15 @@ contract Reels {
                 "Transfer failed"
             );
         }
+        movies[_movieSerial].timesViewed++;
     }
 
     /// @dev function to rate a movie, 1 and 5 inclusive
-    function rateMovie(uint256 _movieSerial, uint256 _rate) external {
-        require(viewed[_movieSerial][msg.sender], "You need to watch the movie first");
+    function rateMovie(uint256 _movieSerial, uint256 _rate) external exist(_movieSerial) isValidViewer(_movieSerial){
+        require(
+            viewed[_movieSerial][msg.sender],
+            "You need to watch the movie first"
+        );
         require((_rate > 0) && (_rate <= 5), "Invalid rate entered");
         require(
             !rated[_movieSerial][msg.sender],
@@ -158,6 +165,7 @@ contract Reels {
     function getMovieDetails(uint256 _movieSerial)
         public
         view
+        exist(_movieSerial)
         returns (
             string memory name,
             string memory description,
@@ -169,10 +177,6 @@ contract Reels {
             uint256 currentValue
         )
     {
-        require(
-            movies[_movieSerial].active,
-            "Movie not active / movie deleted"
-        );
         Movie memory movie = movies[_movieSerial];
         name = movie.name;
         description = movie.description;
