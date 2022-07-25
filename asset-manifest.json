@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/dacade101/static/css/main.4d959e25.chunk.css",
+    "main.js": "/dacade101/static/js/main.15d255d0.chunk.js",
+    "main.js.map": "/dacade101/static/js/main.15d255d0.chunk.js.map",
+    "runtime-main.js": "/dacade101/static/js/runtime-main.d6191ee2.js",
+    "runtime-main.js.map": "/dacade101/static/js/runtime-main.d6191ee2.js.map",
+    "static/css/2.984f751f.chunk.css": "/dacade101/static/css/2.984f751f.chunk.css",
+    "static/js/2.1bcfd7d9.chunk.js": "/dacade101/static/js/2.1bcfd7d9.chunk.js",
+    "static/js/2.1bcfd7d9.chunk.js.map": "/dacade101/static/js/2.1bcfd7d9.chunk.js.map",
+    "static/js/3.0eaf817d.chunk.js": "/dacade101/static/js/3.0eaf817d.chunk.js",
+    "static/js/3.0eaf817d.chunk.js.map": "/dacade101/static/js/3.0eaf817d.chunk.js.map",
+    "index.html": "/dacade101/index.html",
+    "static/css/2.984f751f.chunk.css.map": "/dacade101/static/css/2.984f751f.chunk.css.map",
+    "static/css/main.4d959e25.chunk.css.map": "/dacade101/static/css/main.4d959e25.chunk.css.map",
+    "static/js/2.1bcfd7d9.chunk.js.LICENSE.txt": "/dacade101/static/js/2.1bcfd7d9.chunk.js.LICENSE.txt",
+    "static/media/star.56161079.jpg": "/dacade101/static/media/star.56161079.jpg",
+    "static/media/view.098fd62e.jpg": "/dacade101/static/media/view.098fd62e.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d6191ee2.js",
+    "static/css/2.984f751f.chunk.css",
+    "static/js/2.1bcfd7d9.chunk.js",
+    "static/css/main.4d959e25.chunk.css",
+    "static/js/main.15d255d0.chunk.js"
+  ]
+}
