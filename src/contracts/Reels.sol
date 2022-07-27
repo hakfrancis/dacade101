@@ -79,7 +79,7 @@ contract Reels {
         returns (uint256)
     {
         Movie memory movie = movies[_movieSerial];
-         uint256 increment = (movie.baseValue * movie.timesViewed) / 10;;
+         uint256 increment = (movie.baseValue * movie.timesViewed) / 10;
         uint256 calculatedValue = movie.baseValue + increment;
         return calculatedValue;
     }
