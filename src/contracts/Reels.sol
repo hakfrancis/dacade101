@@ -62,7 +62,7 @@ contract Reels {
     }
 
     modifier isValidViewer(uint _movieSerial){
-        require(movies[_movieSerial].owner == msg.sender || owner == msg.sender, "Unauthorized caller");
+        require(movies[_movieSerial].owner != msg.sender || owner != msg.sender, "Unauthorized caller");
         _;
     }
 
@@ -114,7 +114,8 @@ contract Reels {
     }
 
     /// @dev function to remove a movie from the cinema
-    function removeMovie(uint256 _movieSerial) external exist(_movieSerial) isValidViewer(_movieSerial) {
+    function removeMovie(uint256 _movieSerial) external exist(_movieSerial) {
+        require(movies[_movieSerial].owner == msg.sender || owner == msg.sender, "Unauthorized caller");
         movies[_movieSerial] = movies[serial - 1];
         delete movies[serial - 1];
         exists[serial - 1] = false;
