@@ -41,6 +41,8 @@ contract Reels {
     mapping(uint256 => Movie) internal movies;
     // mapping to keep track of movies user has already rated to prevent rating multiple times
     mapping(uint256 => mapping(address => bool)) internal rated;
+    // mapping to keep track of movies user has watched to prevent non watchers from rating
+    mapping(uint256 => mapping(address => bool)) internal hasWatched;
 
     constructor() {
         owner = payable(msg.sender);
@@ -93,6 +95,7 @@ contract Reels {
     function watchMovie(uint256 _serial) public {
         // first confirm if movie is available
         require(movies[_serial].active, "Movie deleted/does not exist");
+
         // get calculated value of movie
         uint256 calculatedValue = calculateValue(_serial);
         // transfer calculated value from to owner of studio
@@ -104,16 +107,23 @@ contract Reels {
             ),
             "Transfer failed"
         );
+        hasWatched[_serial][msg.sender] = true;
         movies[_serial].timesViewed++;
     }
 
     // function to rate a movie, 1 and 5 inclusive
     function rateMovie(uint256 _serial, uint256 _rate) public {
         require((_rate > 0) && (_rate <= 5), "Invalid rate entered");
+        require(hasWatched[_serial][msg.sender] == true, "You can't rate a move that you didn't watch");
         require(!rated[_serial][msg.sender], "You can't rate movie more than once");
         movies[_serial].rates += _rate;
         movies[_serial].rateCount++;
         rated[_serial][msg.sender] = true;
+    }
+
+    function changePrice(uint256 _serial, uint256 _price) public{
+        require(msg.sender == owner, "Only the owner can change the price");
+        movies[_serial].baseValue = _price;
     }
 
 
